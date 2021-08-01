@@ -8,6 +8,8 @@ import (
 	"github.com/ArunMurugan78/glru/dll"
 )
 
+const DEFAULT_MAX_ITEMS = 10000
+
 // Glru is the main struct which implements the LRU cache.
 type Glru struct {
 	nodeMap  map[string]*dll.Node
@@ -17,15 +19,18 @@ type Glru struct {
 
 // Config is passed to New().
 type Config struct {
-	MaxItems int
+	MaxItems int // Defaults to DEFAULT_MAX_ITEMS
 }
 
-// ErrKeyNotFound is returned by Get method when the key is not found. 
+// ErrKeyNotFound is returned by Get method when the key is not found.
 var ErrKeyNotFound = errors.New("key not found")
-
 
 // New returns a new initialized Glru instance.
 func New(config Config) *Glru {
+	if config.MaxItems <= 0 {
+		config.MaxItems = DEFAULT_MAX_ITEMS
+	}
+
 	return &Glru{maxItems: config.MaxItems, list: dll.New(), nodeMap: make(map[string]*dll.Node)}
 }
 
