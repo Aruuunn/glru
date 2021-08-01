@@ -46,7 +46,8 @@ func getListAfterPrepending(values []interface{}) *dll.Dll {
 	l := dll.New()
 
 	for _, value := range values {
-		l.Prepend(value)
+		// key is not important in this test
+		l.Prepend("", value)
 	}
 
 	return l
