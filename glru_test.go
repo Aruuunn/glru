@@ -35,11 +35,17 @@ func TestGetAndSet(t *testing.T) {
 
 	_, err = cache.Get("KeyNotPresent")
 
-	assert.Equal(t, err, glru.ErrKeyNotFound)
+	assert.Equal(t, glru.ErrKeyNotFound, err)
 
 	cache.Set("Five", 5)
 
-	_, err = cache.Get("One")
+	_, err = cache.Get("Two")
+
+	assert.Equal(t, glru.ErrKeyNotFound, err)
+
+	cache.Set("Six", "6")
+
+	_, err = cache.Get("Three")
 
 	assert.Equal(t, err, glru.ErrKeyNotFound)
 }
