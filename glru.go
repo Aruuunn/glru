@@ -53,11 +53,16 @@ func (cache *Glru) Set(key string, value interface{}) {
 	}
 
 	if cache.items == cache.maxItems {
-		// Cache if full, So delete Least Recently Used
+		// Cache is full, So delete Least Recently Used
 		lastNode := cache.list.GetTail()
 
 		cache.list.DeleteNode(lastNode)
 		delete(cache.nodeMap, lastNode.Key)
+
+		lastNode.Prev = nil
+		lastNode.Next = nil
+
+		cache.items--
 	}
 
 	cache.items++
@@ -80,3 +85,4 @@ func (cache *Glru) Get(key string) (interface{}, error) {
 	}
 	return nil, ErrKeyNotFound
 }
+
