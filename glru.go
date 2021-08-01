@@ -2,6 +2,7 @@ package glru
 
 import (
 	"errors"
+	"sync"
 
 	"github.com/ArunMurugan78/glru/dll"
 )
@@ -23,6 +24,11 @@ func New(config Config) *Glru {
 }
 
 func (cache *Glru) Set(key string, value interface{}) {
+	var mutex sync.Mutex
+
+	mutex.Lock()
+	defer mutex.Unlock()
+
 	node, ok := cache.nodeMap[key]
 
 	if ok {
@@ -37,9 +43,14 @@ func (cache *Glru) Set(key string, value interface{}) {
 }
 
 func (cache *Glru) Get(key string) (interface{}, error) {
+	var mutex sync.Mutex
+
 	node, ok := cache.nodeMap[key]
 
 	if ok {
+		mutex.Lock()
+		defer mutex.Unlock()
+
 		// Brings the accessed node to the front of the list in O(1) time complexity
 		cache.list.DeleteAndInsertAtHead(node)
 		return node.Value, nil
