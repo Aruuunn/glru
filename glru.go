@@ -15,6 +15,7 @@ type Glru struct {
 	nodeMap  map[string]*dll.Node
 	maxItems int
 	list     *dll.Dll
+	items    int
 }
 
 // Config is passed to New().
@@ -51,7 +52,16 @@ func (cache *Glru) Set(key string, value interface{}) {
 		return
 	}
 
-	cache.nodeMap[key] = cache.list.Prepend(value)
+	if cache.items == cache.maxItems {
+		// Cache if full, So delete Least Recently Used
+		lastNode := cache.list.GetTail()
+
+		cache.list.DeleteNode(lastNode)
+		delete(cache.nodeMap, lastNode.Key)
+	}
+
+	cache.items++
+	cache.nodeMap[key] = cache.list.Prepend(key, value)
 }
 
 // Get returns the value association with the key. Returns ErrKeyNotFound if the key is not found in cache.
