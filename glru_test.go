@@ -20,7 +20,10 @@ func TestNewGlru(t *testing.T) {
 
 	got, err := cache.Get("One")
 
-	assert.NotNil(t, err)
-
+	assert.Nil(t, err)
 	assert.Equal(t, val, got)
+
+	_, err = cache.Get("KeyNotPresent")
+
+	assert.Equal(t, err, glru.ErrKeyNotFound)
 }
