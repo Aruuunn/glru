@@ -25,6 +25,12 @@ func (l *Dll) GetHead() *Node {
 	return l.head
 }
 
+// GetTail returns the tail of the list.
+func (l *Dll) GetTail() *Node {
+	return l.tail
+}
+
+
 // Prepend adds the passed value to the front of the list.
 func (l *Dll) Prepend(key string, value interface{}) *Node {
 	node := &Node{Value: value, Key: key}
