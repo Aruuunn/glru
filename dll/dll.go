@@ -1,9 +1,11 @@
 // package dll implements a Doubly linked List, with few needed methods.
 package dll
 
+import "fmt"
+
 // Node is the fundamental element of Dll.
 type Node struct {
-	Key string
+	Key   string
 	Value interface{}
 	Next  *Node
 	Prev  *Node
@@ -29,7 +31,6 @@ func (l *Dll) GetHead() *Node {
 func (l *Dll) GetTail() *Node {
 	return l.tail
 }
-
 
 // Prepend adds the passed value to the front of the list.
 func (l *Dll) Prepend(key string, value interface{}) *Node {
@@ -58,6 +59,8 @@ func (l *Dll) DeleteNode(ref *Node) {
 
 		if ref.Next != nil {
 			ref.Next.Prev = ref.Prev
+		} else {
+			l.tail = ref.Prev
 		}
 	} else {
 		// ref is the head of list.
@@ -67,6 +70,7 @@ func (l *Dll) DeleteNode(ref *Node) {
 			l.head = ref.Next
 		} else {
 			l.head = nil
+			l.tail = nil
 		}
 	}
 }
@@ -78,5 +82,17 @@ func (l *Dll) DeleteAndInsertAtHead(ref *Node) {
 	}
 
 	l.DeleteNode(ref)
-	l.Prepend(ref.Key,ref.Value)
+	l.Prepend(ref.Key, ref.Value)
+}
+
+func (l *Dll) String() string {
+	list := ""
+	ptr := l.head
+
+	for ptr != nil {
+		list = fmt.Sprintf("%s - (%s, %v) - ", list, ptr.Key, ptr.Value)
+		ptr = ptr.Next
+	}
+
+	return "Dll(" + list + ")"
 }
