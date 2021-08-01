@@ -3,6 +3,7 @@ package dll
 
 // Node is the fundamental element of Dll.
 type Node struct {
+	Key string
 	Value interface{}
 	Next  *Node
 	Prev  *Node
@@ -25,8 +26,8 @@ func (l *Dll) GetHead() *Node {
 }
 
 // Prepend adds the passed value to the front of the list.
-func (l *Dll) Prepend(value interface{}) *Node {
-	node := &Node{Value: value}
+func (l *Dll) Prepend(key string, value interface{}) *Node {
+	node := &Node{Value: value, Key: key}
 
 	if l.head == nil {
 		l.tail = node
@@ -71,5 +72,5 @@ func (l *Dll) DeleteAndInsertAtHead(ref *Node) {
 	}
 
 	l.DeleteNode(ref)
-	l.Prepend(ref.Value)
+	l.Prepend(ref.Key,ref.Value)
 }
