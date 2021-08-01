@@ -48,11 +48,19 @@ func (l *Dll) DeleteNode(ref *Node) {
 
 	if ref.Prev != nil {
 		ref.Prev.Next = ref.Next
-		ref.Next.Prev = ref.Prev
+
+		if ref.Next != nil {
+			ref.Next.Prev = ref.Prev
+		}
 	} else {
 		// ref is the head of list.
-		ref.Next.Prev = nil
-		l.head = ref.Next
+		if ref.Next != nil {
+
+			ref.Next.Prev = nil
+			l.head = ref.Next
+		} else {
+			l.head = nil
+		}
 	}
 }
 
