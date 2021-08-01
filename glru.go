@@ -1,3 +1,4 @@
+// package glru encapsulates logic for the LRU cache.
 package glru
 
 import (
