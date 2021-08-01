@@ -76,13 +76,15 @@ func (l *Dll) DeleteNode(ref *Node) {
 }
 
 // DeleteAndInsertAtHead does what it's name suggests.
-func (l *Dll) DeleteAndInsertAtHead(ref *Node) {
+func (l *Dll) DeleteAndInsertAtHead(ref *Node) *Node {
 	if ref == nil {
-		return
+		return nil
 	}
 
 	l.DeleteNode(ref)
 	l.Prepend(ref.Key, ref.Value)
+
+	return l.GetHead()
 }
 
 func (l *Dll) String() string {

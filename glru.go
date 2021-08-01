@@ -55,14 +55,7 @@ func (cache *Glru) Set(key string, value interface{}) {
 	if cache.items == cache.maxItems {
 		// Cache is full, So delete Least Recently Used
 		lastNode := cache.list.GetTail()
-
-		cache.list.DeleteNode(lastNode)
-		delete(cache.nodeMap, lastNode.Key)
-
-		lastNode.Prev = nil
-		lastNode.Next = nil
-
-		cache.items--
+		cache.deleteKey(lastNode.Key)
 	}
 
 	cache.items++
@@ -80,9 +73,32 @@ func (cache *Glru) Get(key string) (interface{}, error) {
 		defer mutex.Unlock()
 
 		// Brings the accessed node to the front of the list in O(1) time complexity
-		cache.list.DeleteAndInsertAtHead(node)
+		cache.nodeMap[key] = cache.list.DeleteAndInsertAtHead(node)
 		return node.Value, nil
 	}
 	return nil, ErrKeyNotFound
 }
 
+func (cache *Glru) DeleteKey(key string) {
+	var mutex sync.Mutex
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	cache.deleteKey(key)
+}
+
+func (cache *Glru) deleteKey(key string) {
+	node, ok := cache.nodeMap[key]
+
+	if !ok {
+		return
+	}
+
+	cache.list.DeleteNode(node)
+	delete(cache.nodeMap, node.Key)
+
+	node.Prev = nil
+	node.Next = nil
+
+	cache.items--
+}
