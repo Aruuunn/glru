@@ -22,30 +22,45 @@ func TestGetAndSet(t *testing.T) {
 		MaxItems: 4,
 	})
 
+	assertNotFound := func(key string) {
+		_, err := cache.Get(key)
+
+		assert.Equal(t, glru.ErrKeyNotFound, err)
+	}
+
+	assertExpectedValue := func(key string, expectedValue interface{}) {
+		val, err := cache.Get(key)
+		assert.Nil(t, err)
+		assert.Equal(t, expectedValue, val)
+	}
+
 	val := struct{ Name string }{"arun"}
 	cache.Set("One", val)
 	cache.Set("Two", 2)
 	cache.Set("Three", "3")
 	cache.Set("Four", 4)
 
-	got, err := cache.Get("One")
+	assertExpectedValue("One", val)
 
-	assert.Nil(t, err)
-	assert.Equal(t, val, got)
-
-	_, err = cache.Get("KeyNotPresent")
-
-	assert.Equal(t, glru.ErrKeyNotFound, err)
+	assertNotFound("KeyNotPresent")
 
 	cache.Set("Five", 5)
 
-	_, err = cache.Get("Two")
-
-	assert.Equal(t, glru.ErrKeyNotFound, err)
+	assertNotFound("Two")
 
 	cache.Set("Six", "6")
 
-	_, err = cache.Get("Three")
+	assertNotFound("Three")
 
-	assert.Equal(t, err, glru.ErrKeyNotFound)
+	assertExpectedValue("Six", "6")
+
+	assertExpectedValue("Five", 5)
+
+	assertExpectedValue("Four", 4)
+
+	cache.Set("Name", "arun")
+	cache.Set("Golang", "Awesome")
+
+	assertNotFound("Six")
+	assertExpectedValue("Name", "arun")
 }
