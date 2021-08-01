@@ -18,9 +18,9 @@ func TestNewGlru(t *testing.T) {
 	cache.Set("Three", "3")
 	cache.Set("Four", 4)
 
-  got, err := cache.Get("One")
-  
-  assert.NotNil(t, err)
+	got, err := cache.Get("One")
+
+	assert.NotNil(t, err)
 
 	assert.Equal(t, val, got)
 }

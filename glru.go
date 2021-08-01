@@ -19,7 +19,7 @@ type Config struct {
 var ErrKeyNotFound = errors.New("key not found")
 
 func New(config Config) *Glru {
-  return &Glru{maxItems: config.MaxItems, list: dll.New(), nodeMap: make(map[string]*dll.Node)}
+	return &Glru{maxItems: config.MaxItems, list: dll.New(), nodeMap: make(map[string]*dll.Node)}
 }
 
 func (cache *Glru) Set(key string, value interface{}) {
