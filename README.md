@@ -2,4 +2,7 @@
 
 [![Go](https://github.com/ArunMurugan78/glru/actions/workflows/go.yml/badge.svg)](https://github.com/ArunMurugan78/glru/actions/workflows/go.yml)
 
-A Concurrent Safe LRU implementation in Golang.
+
+A Simple Concurrent Safe LRU implementation in Golang.
+
+<img src="./gopher.png"  height="200"/>
