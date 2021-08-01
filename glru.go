@@ -7,22 +7,28 @@ import (
 	"github.com/ArunMurugan78/glru/dll"
 )
 
+// Glru is the main struct which implements the LRU cache.
 type Glru struct {
 	nodeMap  map[string]*dll.Node
 	maxItems int
 	list     *dll.Dll
 }
 
+// Config is passed to New().
 type Config struct {
 	MaxItems int
 }
 
+// ErrKeyNotFound is returned by Get method when the key is not found. 
 var ErrKeyNotFound = errors.New("key not found")
 
+
+// New returns a new initialized Glru instance.
 func New(config Config) *Glru {
 	return &Glru{maxItems: config.MaxItems, list: dll.New(), nodeMap: make(map[string]*dll.Node)}
 }
 
+// Set adds the key-value pair to the cache.
 func (cache *Glru) Set(key string, value interface{}) {
 	var mutex sync.Mutex
 
@@ -42,6 +48,7 @@ func (cache *Glru) Set(key string, value interface{}) {
 	cache.nodeMap[key] = cache.list.Prepend(value)
 }
 
+// Get returns the value association with the key. Returns ErrKeyNotFound if the key is not found in cache.
 func (cache *Glru) Get(key string) (interface{}, error) {
 	var mutex sync.Mutex
 
