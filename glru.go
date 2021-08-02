@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/ArunMurugan78/glru/dll"
+	"github.com/arunmurugan78/glru/dll"
 )
 
 const DEFAULT_MAX_ITEMS = 10000

@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/ArunMurugan78/glru"
+	"github.com/arunmurugan78/glru"
 	"github.com/stretchr/testify/assert"
 )
 
