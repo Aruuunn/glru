@@ -5,4 +5,10 @@
 
 A Simple Concurrent Safe LRU implementation in Golang.
 
-<img src="./gopher.png"  height="200"/>
+ <img src="./gopher.png"  height="200"/>
+
+
+ ## Installation
+```
+go get github.com/ArunMurugan78/glru
+```
