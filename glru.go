@@ -79,7 +79,7 @@ func (cache *Glru) Get(key string) (interface{}, error) {
 	return nil, ErrKeyNotFound
 }
 
-func (cache *Glru) DeleteKey(key string) {
+func (cache *Glru) Delete(key string) {
 	var mutex sync.Mutex
 	mutex.Lock()
 	defer mutex.Unlock()
