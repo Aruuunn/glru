@@ -1,4 +1,4 @@
-module github.com/ArunMurugan78/glru
+module github.com/arunmurugan78/glru
 
 go 1.16
 
