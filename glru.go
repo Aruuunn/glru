@@ -16,6 +16,7 @@ type Glru struct {
 	maxItems int
 	list     *dll.Dll
 	items    int
+	mutex    *sync.Mutex
 }
 
 // Config is passed to New().
@@ -32,15 +33,18 @@ func New(config Config) *Glru {
 		config.MaxItems = DEFAULT_MAX_ITEMS
 	}
 
-	return &Glru{maxItems: config.MaxItems, list: dll.New(), nodeMap: make(map[string]*dll.Node)}
+	return &Glru{
+		maxItems: config.MaxItems,
+		list:     dll.New(),
+		nodeMap:  make(map[string]*dll.Node),
+		mutex:    &sync.Mutex{},
+	}
 }
 
 // Set adds the key-value pair to the cache.
 func (cache *Glru) Set(key string, value interface{}) {
-	var mutex sync.Mutex
-
-	mutex.Lock()
-	defer mutex.Unlock()
+	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
 
 	node, ok := cache.nodeMap[key]
 
@@ -64,14 +68,12 @@ func (cache *Glru) Set(key string, value interface{}) {
 
 // Get returns the value association with the key. Returns ErrKeyNotFound if the key is not found in cache.
 func (cache *Glru) Get(key string) (interface{}, error) {
-	var mutex sync.Mutex
+	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
 
 	node, ok := cache.nodeMap[key]
 
 	if ok {
-		mutex.Lock()
-		defer mutex.Unlock()
-
 		// Brings the accessed node to the front of the list in O(1) time complexity
 		cache.nodeMap[key] = cache.list.DeleteAndInsertAtHead(node)
 		return node.Value, nil
@@ -80,9 +82,8 @@ func (cache *Glru) Get(key string) (interface{}, error) {
 }
 
 func (cache *Glru) Delete(key string) {
-	var mutex sync.Mutex
-	mutex.Lock()
-	defer mutex.Unlock()
+	cache.mutex.Lock()
+	defer cache.mutex.Unlock()
 
 	cache.deleteKey(key)
 }
